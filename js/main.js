@@ -1,26 +1,44 @@
 'use strict';
 
-var COMMENTS_MESSAGES = ['Всё отлично!',
+var COMMENTS_MESSAGES = [
+  'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
   'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
-  'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
+  'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
+];
 var COMMENTS_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
-
+var NUMBER_PHOTO = 25;
+var MIN_PHOTO_URL = 1;
+var MAX_PHOTO_URL = 25;
+var MIN_AVATAR_URL = 1;
+var MAX_AVATAR_URL = 6;
+var MIN_LIKES = 15;
+var MAX_LIKES = 200;
+var MIN_COMMENTS = 0;
+var MAX_COMMENTS = 20;
 var photos = [];
-var numberPhoto = 25;
-var minPhotoUrl = 1;
-var maxPhotoUrl = 25;
-var minAvatarUrl = 1;
-var maxAvatarUrl = 6;
-var minLikes = 15;
-var maxLikes = 200;
-var comments = [];
-var minComments = 0;
-var maxComments = 20;
+var arrayTotalNumbersUrl = [];
+var arrayRandomNumbersUrl = [];
 
-var getRandomArrayMember = function (arr) {
+var getArrayRandomNumberUrl = function (min, max) {
+  var tempRandomNumber;
+  var totalNumbers = max - min + 1;
+  while (totalNumbers--) {
+    arrayTotalNumbersUrl.push(totalNumbers + min);
+  }
+  while (arrayTotalNumbersUrl.length) {
+    tempRandomNumber = Math.round(Math.random() * (arrayTotalNumbersUrl.length - 1));
+    arrayRandomNumbersUrl.push(arrayTotalNumbersUrl[tempRandomNumber]);
+    arrayTotalNumbersUrl.splice(tempRandomNumber, 1);
+  }
+  return arrayRandomNumbersUrl;
+};
+
+getArrayRandomNumberUrl(MIN_PHOTO_URL, MAX_PHOTO_URL);
+
+var getRandomArrayElement = function (arr) {
   var rand = Math.floor(Math.random() * arr.length);
   return arr[rand];
 };
@@ -30,30 +48,29 @@ var getRandomNumber = function (min, max) {
 };
 
 var getRandomArrayComments = function (numberComments) {
+  var comments = [];
   for (var i = 0; i < numberComments; i++) {
-    comments [i] = {
-      avatar: 'img/avatar-' + getRandomNumber(minAvatarUrl, maxAvatarUrl) + '.svg',
-      message: getRandomArrayMember(COMMENTS_MESSAGES),
-      name: getRandomArrayMember(COMMENTS_NAMES)
+    comments[i] = {
+      avatar: 'img/avatar-' + getRandomNumber(MIN_AVATAR_URL, MAX_AVATAR_URL) + '.svg',
+      message: getRandomArrayElement(COMMENTS_MESSAGES),
+      name: getRandomArrayElement(COMMENTS_NAMES)
+    };
+  }
+  return comments;
+};
+
+var getRandomArrayPhoto = function (numberPhoto) {
+  for (var i = 0; i < numberPhoto; i++) {
+    photos[i] = {
+      url: 'photos/' + arrayRandomNumbersUrl[i] + '.jpg',
+      description: getRandomArrayElement(COMMENTS_NAMES),
+      likes: getRandomNumber(MIN_LIKES, MAX_LIKES),
+      comments: getRandomArrayComments(getRandomNumber(MIN_COMMENTS, MAX_COMMENTS))
     };
   }
 };
 
-getRandomArrayComments(getRandomNumber(minComments, maxComments));
-
-var getRandomArrayPhoto = function (number) {
-  for (var i = 0; i < number; i++) {
-    getRandomArrayComments(getRandomNumber(minComments, maxComments));// не работает, буду думать как переделать, чтобы на каждой итерации задавался новый массив с комментариями
-    photos [i] = {
-      url: 'photos/' + getRandomNumber(minPhotoUrl, maxPhotoUrl) + '.jpg', // число случайное, но пока повторяется, тоже буду менять
-      description: getRandomArrayMember(COMMENTS_NAMES),
-      likes: getRandomNumber(minLikes, maxLikes),
-      comments: comments
-    };
-  }
-};
-
-getRandomArrayPhoto(numberPhoto);
+getRandomArrayPhoto(NUMBER_PHOTO);
 
 var similarListElement = document.querySelector('.pictures');
 var similarPhotoTemplate = document.querySelector('#picture')
