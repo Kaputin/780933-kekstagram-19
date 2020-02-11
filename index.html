@@ -34,13 +34,17 @@
 
             <!-- Изначальное состояние поля для загрузки изображения -->
             <fieldset class="img-upload__start">
-              <input type="file" id="upload-file" class="img-upload__input  visually-hidden" name="filename" required>
+              <input type="file" id="upload-file" class="img-upload__input  visually-hidden" name="filename" accept="image/png, image/jpeg" required>
               <label for="upload-file" class="img-upload__label  img-upload__control">Загрузить</label>
             </fieldset>
 
             <!-- Форма редактирования изображения -->
             <div class="img-upload__overlay  hidden">
-              <div class="img-upload__wrapper">
+              <div class="img-upload__wrapper"
+                method="post"
+                enctype="multipart/form-data"
+                action="https://js.dump.academy/kekstagram"
+                autocomplete="off">
                 <div class="img-upload__preview-container">
 
                   <!-- Изменение размера изображения -->
@@ -119,11 +123,11 @@
                 <!-- Добавление хэш-тегов и комментария к изображению -->
                 <fieldset class="img-upload__text text">
                   <input class="text__hashtags" name="hashtags" placeholder="#хэш-тег">
-                  <textarea class="text__description" name="description" placeholder="Ваш комментарий..."></textarea>
+                  <textarea class="text__description" name="description" placeholder="Ваш комментарий..." maxlength="140"></textarea>
                 </fieldset>
 
                 <!-- Кнопка для отправки данных на сервер -->
-                <button type="submit" class="img-upload__submit" id="upload-submit">Опубликовать</button>
+                <button type="submit" class="img-upload__submit" id="upload-submit" >Опубликовать</button>
               </div>
             </div>
           </form>
