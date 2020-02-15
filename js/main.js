@@ -27,17 +27,17 @@ while (totalNumbers--) {
   arrayTotalNumbersUrl.push(totalNumbers + 1); // Создаем массив с числами по порядку
 }
 
-var getArrayRandomNumberUrl = function (arr) { // создаем функцию для случайного тасования множества (Тасование Фишера — Йетса)
+var getRandomArray = function (arr) { // создаем функцию для случайного тасования множества (Тасование Фишера — Йетса)
   for (var i = arr.length - 1; i > 0; i--) { // проходим по массиву в обратном порядке
     var j = Math.floor(Math.random() * i); // задаем случайный индекс от 0 до i
     var temp = arr[i]; // меняем местами каждый элемент со случайным элементом, который находится перед ним
     arr[i] = arr[j];
     arr[j] = temp;
   }
-  return arrayTotalNumbersUrl; // возвращаем перетасованный массив
+  return arr; // возвращаем перетасованный массив
 };
 
-getArrayRandomNumberUrl(arrayTotalNumbersUrl);
+getRandomArray(arrayTotalNumbersUrl); // меняет расположение в уже созданном arrayTotalNumbersUrl, или создать переменну где массив будет лежать, а этот не трогать?
 
 var getRandomArrayElement = function (arr) {
   var rand = Math.floor(Math.random() * arr.length);
@@ -100,6 +100,7 @@ var ESC_KEY = 'Escape';
 var ENTER_KEY = 'Enter';
 
 var body = document.querySelector('body');
+var form = document.querySelector('.img-upload__form');
 var uploadFile = document.querySelector('#upload-file');
 var imgUploadOverlay = document.querySelector('.img-upload__overlay');
 var uploadCancel = document.querySelector('#upload-cancel');
@@ -124,6 +125,7 @@ var openPopup = function () {
     uploadFile.removeEventListener('change', onOpenPopupClick);
     previewImg.className = 'effects__preview--none'; // убираю эффект при открытии, т.к. при закрытии он оставляет последний
     effectLevel.hidden = true; // т.к. отрытие идет без эффекта убираю ползунок при открытии, потом при разбивке сделаю функцию отдельную
+    previewImg.style.filter = '';
   }
 };
 
@@ -146,7 +148,7 @@ var closePopup = function () {
   uploadFile.addEventListener('change', onOpenPopupClick);
   uploadCancel.removeEventListener('click', onClosePopupClick);
   uploadCancel.removeEventListener('keydown', onClosePopupKeydown);
-  uploadFile.value = null;
+  form.reset();
 };
 
 var onClosePopupClick = function () {
@@ -170,6 +172,7 @@ var previewImg = document.querySelector('.img-upload__preview img');
 var effectLevelPin = document.querySelector('.effect-level__pin');
 var effectLevelDepth = document.querySelector('.effect-level__depth');
 var effectLevelValue = document.querySelector('.effect-level__value');
+var effectLevelLine = document.querySelector('.effect-level__line');
 
 // --------------Перемещение ползунка-------------------- //
 effectLevelPin.addEventListener('mousedown', function (evt) {
@@ -188,12 +191,12 @@ effectLevelPin.addEventListener('mousedown', function (evt) {
       x: moveEvt.clientX,
     };
 
-    var minPin = 0;
-    var maxPin = 450;
+    var MIN_PIN = 0;
+    var maxPin = effectLevel.offsetWidth - (effectLevelLine.offsetLeft + (effectLevel.offsetWidth - effectLevelLine.offsetWidth - effectLevelLine.offsetLeft));
 
     var movingPinAndDepth = (effectLevelPin.offsetLeft - shift.x);
-    if (movingPinAndDepth < minPin) {
-      effectLevelPin.style.left = minPin + 'px';
+    if (movingPinAndDepth < MIN_PIN) {
+      effectLevelPin.style.left = MIN_PIN + 'px';
       effectLevelDepth.style.width = effectLevelPin.style.left;
       effectLevelValue.value = 0;
     } else {
@@ -203,8 +206,25 @@ effectLevelPin.addEventListener('mousedown', function (evt) {
       } else {
         effectLevelPin.style.left = (effectLevelPin.offsetLeft - shift.x) + 'px';
         effectLevelDepth.style.width = effectLevelPin.style.left;
-        effectLevelValue.value = Math.floor((effectLevelPin.offsetLeft - shift.x) / 4.5);
+        effectLevelValue.value = Math.floor((effectLevelPin.offsetLeft - shift.x) / (maxPin / 100));
       }
+    }
+
+    if (previewImg.className === 'effects__preview--chrome') {
+      previewImg.style.filter = 'grayscale(1)';
+      previewImg.style.filter = 'grayscale(' + effectLevelValue.value / 100 + ')';
+    } else if (previewImg.className === 'effects__preview--sepia') {
+      previewImg.style.filter = 'sepia(1)';
+      previewImg.style.filter = 'sepia(' + effectLevelValue.value / 100 + ')';
+    } else if (previewImg.className === 'effects__preview--marvin') {
+      previewImg.style.filter = 'invert(100%)';
+      previewImg.style.filter = 'invert(' + effectLevelValue.value + '%)';
+    } else if (previewImg.className === 'effects__preview--phobos') {
+      previewImg.style.filter = 'blur(3px)';
+      previewImg.style.filter = 'blur(' + 3 * effectLevelValue.value / 100 + 'px)';
+    } else if (previewImg.className === 'effects__preview--heat') {
+      previewImg.style.filter = 'brightness(3)';
+      previewImg.style.filter = 'brightness(' + (1 + 2 * effectLevelValue.value / 100) + ')';
     }
   };
 
@@ -219,40 +239,16 @@ effectLevelPin.addEventListener('mousedown', function (evt) {
       };
       effectLevelPin.addEventListener('click', onClickPreventDefault);
     }
-
-    if (previewImg.className === 'effects__preview--chrome') {
-      previewImg.style.filter = 'grayscale(1)';
-      previewImg.style.filter = 'grayscale(' + effectLevelValue.value / 100 + ')';
-    } else {
-      if (previewImg.className === 'effects__preview--sepia') {
-        previewImg.style.filter = 'sepia(1)';
-        previewImg.style.filter = 'sepia(' + effectLevelValue.value / 100 + ')';
-      } else {
-        if (previewImg.className === 'effects__preview--marvin') {
-          previewImg.style.filter = 'invert(100%)';
-          previewImg.style.filter = 'invert(' + effectLevelValue.value + '%)';
-        } else {
-          if (previewImg.className === 'effects__preview--phobos') {
-            previewImg.style.filter = 'blur(3px)';
-            previewImg.style.filter = 'blur(' + 3 * effectLevelValue.value / 100 + 'px)';
-          } else {
-            if (previewImg.className === 'effects__preview--heat') {
-              previewImg.style.filter = 'brightness(3)';
-              previewImg.style.filter = 'brightness(' + (1 + 2 * effectLevelValue.value / 100) + ')';
-            }
-          }
-        }
-      }
-    }
   };
 
   document.addEventListener('mousemove', onMouseMove); // навесил на документ, что перемещать откинув мышь
 
   document.addEventListener('mouseup', onMouseUp); // навесил на документ, что перемещать откинув мышь
+
 });
 
 // ------------------------------ Смена фильтров и возврат к стандартному значению 100 -----------------//
-var filterChangeHandler = function (evt) {
+var filterChangeHandler = function (evt) { // вы писали что необходимо совместить с другим, но тот рабоатет на перемещении, немного пока не понимаю как объединить, может пойму когда буду разбивать на отдельные файлы
   if (evt.target) {
     previewImg.className = 'effects__preview--' + evt.target.value;
     if (previewImg.className !== 'effects__preview--none') {
@@ -280,6 +276,7 @@ var filterChangeHandler = function (evt) {
         }
       }
     } else {
+      previewImg.style.filter = '';
       effectLevel.hidden = true;
       effectLevelValue.value = 20;
       effectLevelPin.style.left = '20%';
@@ -292,21 +289,16 @@ effectList.addEventListener('change', filterChangeHandler);
 
 
 // --------------Валидация (не проверил все варианты, нашел косяки)-------------------- //
-
-var hasRepeatingHashtags = function (arrHashtags) {
-  arrHashtags.sort();
-  for (var j = 0; j < arrHashtags.length - 1; j++) {
-    if (arrHashtags[j] === arrHashtags[j + 1]) {
-      return true;
-    }
-  }
-  return false;
+var test = function (elem, pos, arr) {
+  return pos !== arr.indexOf(elem) || pos !== arr.lastIndexOf(elem);
 };
+
 var submit = document.querySelector('#upload-submit');
 
 
 var onCheckHashtag = function () {
-  var target = textHashtags;
+  var target = [];
+  target = textHashtags;
   if (target.value === '') {
     return;
   } else {
@@ -328,7 +320,7 @@ var onCheckHashtag = function () {
         target.setCustomValidity(
             'Хеш-теги должны разделяться пробелами'
         );
-      } else if (hasRepeatingHashtags(hashtagsList)) { // indexOf находит сам себя, задавал двумя промежутками пока еще не разобрался. чуть позже переделаю
+      } else if (test(hashtagsList[h], h, hashtagsList)) {
         target.setCustomValidity(
             'Один и тот же хэш-тег не может быть использован дважды'
         );
@@ -336,6 +328,7 @@ var onCheckHashtag = function () {
         target.setCustomValidity(
             'Нельзя указать больше пяти хэш-тегов'
         );
+
       } else {
         target.setCustomValidity('');
       }
