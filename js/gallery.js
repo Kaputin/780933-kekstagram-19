@@ -1,61 +1,43 @@
 'use strict';
 (function () {
+  // ЧТО ДЕЛАТЬ С КОДОМ КОТОРЫЙ БОЛЬШЕ НЕ БУДЕМ ИСПОЛЬЗОВАТЬ?? ПОКА ОСТАВИТЬ??
 
-  var photos = [];
-  var arrayTotalNumbersUrl = [];
 
-  var totalNumbers = window.MAX_PHOTO_URL - window.MIN_PHOTO_URL + 1; // считаем общее количество ссылок
-
-  while (totalNumbers--) {
-    arrayTotalNumbersUrl.push(totalNumbers + 1); // Создаем массив с числами по порядку
-  }
-
-  var getRandomArray = function (arr) { // создаем функцию для случайного тасования множества (Тасование Фишера — Йетса)
-    var randomArr = arr.slice();
-    for (var i = randomArr.length - 1; i > 0; i--) { // проходим по массиву в обратном порядке
-      var j = Math.floor(Math.random() * i); // задаем случайный индекс от 0 до i
-      var temp = randomArr[i]; // меняем местами каждый элемент со случайным элементом, который находится перед ним
-      randomArr[i] = randomArr[j];
-      randomArr[j] = temp;
-    }
-    return randomArr; // возвращаем перетасованный массив
-  };
-
-  var randomArrayUrl = getRandomArray(arrayTotalNumbersUrl);
-
-  var getRandomArrayElement = function (arr) {
-    var rand = Math.floor(Math.random() * arr.length);
-    return arr[rand];
-  };
-
-  var getRandomNumber = function (min, max) {
-    return Math.floor(min + Math.random() * (max - min));
-  };
-
-  var getRandomArrayComments = function (numberComments) {
-    var comments = [];
-    for (var i = 0; i < numberComments; i++) {
-      comments[i] = {
-        avatar: 'img/avatar-' + getRandomNumber(window.MIN_AVATAR_URL, window.MAX_AVATAR_URL) + '.svg',
-        message: getRandomArrayElement(window.COMMENTS_MESSAGES),
-        name: getRandomArrayElement(window.COMMENTS_NAMES)
-      };
-    }
-    return comments;
-  };
-
-  var getRandomArrayPhoto = function (numberPhoto) {
-    for (var i = 0; i < numberPhoto; i++) {
-      photos[i] = {
-        url: 'photos/' + randomArrayUrl[i] + '.jpg',
-        description: getRandomArrayElement(window.COMMENTS_NAMES),
-        likes: getRandomNumber(window.MIN_LIKES, window.MAX_LIKES),
-        comments: getRandomArrayComments(getRandomNumber(window.MIN_COMMENTS, window.MAX_COMMENTS))
-      };
-    }
-  };
-
-  getRandomArrayPhoto(window.NUMBER_PHOTO);
+  // var photos = [];
+  // var arrayTotalNumbersUrl = [];
+  //
+  // var totalNumbers = window.data.MAX_PHOTO_URL - window.data.MIN_PHOTO_URL + 1; // считаем общее количество ссылок
+  //
+  // while (totalNumbers--) {
+  //   arrayTotalNumbersUrl.push(totalNumbers + 1); // Создаем массив с числами по порядку
+  // }
+  //
+  // var randomArrayUrl = window.getRandomArray(arrayTotalNumbersUrl);
+  //
+  // var getRandomArrayComments = function (numberComments) {
+  //   var comments = [];
+  //   for (var i = 0; i < numberComments; i++) {
+  //     comments[i] = {
+  //       avatar: 'img/avatar-' + window.getRandomNumber(window.data.MIN_AVATAR_URL, window.data.MAX_AVATAR_URL) + '.svg',
+  //       message: window.getRandomArrayElement(window.data.COMMENTS_MESSAGES),
+  //       name: window.getRandomArrayElement(window.data.COMMENTS_NAMES)
+  //     };
+  //   }
+  //   return comments;
+  // };
+  //
+  // var getRandomArrayPhoto = function (numberPhoto) {
+  //   for (var i = 0; i < numberPhoto; i++) {
+  //     photos[i] = {
+  //       url: 'photos/' + randomArrayUrl[i] + '.jpg',
+  //       description: window.getRandomArrayElement(window.data.COMMENTS_NAMES),
+  //       likes: window.getRandomNumber(window.data.MIN_LIKES, window.data.MAX_LIKES),
+  //       comments: getRandomArrayComments(window.getRandomNumber(window.data.MIN_COMMENTS, window.data.MAX_COMMENTS))
+  //     };
+  //   }
+  // };
+  //
+  // getRandomArrayPhoto(window.data.NUMBER_PHOTO);
 
   var similarListElement = document.querySelector('.pictures');
   var similarPhotoTemplate = document.querySelector('#picture')
@@ -72,11 +54,34 @@
     return photoElement;
   };
 
-  var fragment = document.createDocumentFragment();
-  for (var i = 0; i < photos.length; i++) {
-    fragment.appendChild(renderPhoto(photos[i]));
-  }
+  // var fragment = document.createDocumentFragment();
+  // for (var i = 0; i < photos.length; i++) {
+  //   fragment.appendChild(renderPhoto(photos[i]));
+  // }
+  //
+  // similarListElement.appendChild(fragment);
 
-  similarListElement.appendChild(fragment);
+  var onSuccess = function (photos) {
+    var fragment = document.createDocumentFragment();
+
+    for (var i = 0; i < 25; i++) {
+      fragment.appendChild(renderPhoto(photos[i]));
+    }
+    similarListElement.appendChild(fragment);
+  };
+
+  var onError = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '30px';
+
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
+
+  window.backendLoad(onSuccess, onError);
 
 })();

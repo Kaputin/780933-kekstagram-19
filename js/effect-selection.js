@@ -13,22 +13,14 @@
         window.effectLevelDepth.style.width = '100%';
         if (window.previewImg.className === 'effects__preview--chrome') {
           window.previewImg.style.filter = 'grayscale(1)';
-        } else {
-          if (window.previewImg.className === 'effects__preview--sepia') {
-            window.previewImg.style.filter = 'sepia(1)';
-          } else {
-            if (window.previewImg.className === 'effects__preview--marvin') {
-              window.previewImg.style.filter = 'invert(100%)';
-            } else {
-              if (window.previewImg.className === 'effects__preview--phobos') {
-                window.previewImg.style.filter = 'blur(3px)';
-              } else {
-                if (window.previewImg.className === 'effects__preview--heat') {
-                  window.previewImg.style.filter = 'brightness(3)';
-                }
-              }
-            }
-          }
+        } else if (window.previewImg.className === 'effects__preview--sepia') {
+          window.previewImg.style.filter = 'sepia(1)';
+        } else if (window.previewImg.className === 'effects__preview--marvin') {
+          window.previewImg.style.filter = 'invert(100%)';
+        } else if (window.previewImg.className === 'effects__preview--phobos') {
+          window.previewImg.style.filter = 'blur(3px)';
+        } else if (window.previewImg.className === 'effects__preview--heat') {
+          window.previewImg.style.filter = 'brightness(3)';
         }
       } else {
         window.previewImg.style.filter = '';

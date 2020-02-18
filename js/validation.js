@@ -2,10 +2,6 @@
 (function () {
   var submit = document.querySelector('#upload-submit');
 
-  var hasRepeatingHashtags = function (elem, pos, arr) {
-    return pos !== arr.indexOf(elem) || pos !== arr.lastIndexOf(elem);
-  };
-
   var onCheckHashtag = function () {
     var target = [];
     target = window.textHashtags;
@@ -30,7 +26,7 @@
           target.setCustomValidity(
               'Хеш-теги должны разделяться пробелами'
           );
-        } else if (hasRepeatingHashtags(hashtagsList[h], h, hashtagsList)) {
+        } else if (window.hasRepeatingElement(hashtagsList[h], h, hashtagsList)) {
           target.setCustomValidity(
               'Один и тот же хэш-тег не может быть использован дважды'
           );
@@ -48,7 +44,7 @@
   submit.addEventListener('click', onCheckHashtag);
 
   submit.addEventListener('keydown', function (evt) {
-    if (evt.key === window.ENTER_KEY) {
+    if (evt.key === window.util.ENTER_KEY) {
       onCheckHashtag();
     }
   });

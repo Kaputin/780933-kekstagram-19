@@ -18,7 +18,7 @@
   var onPopupEscPress = function (evt) {
     if (textDescription === document.activeElement || window.textHashtags === document.activeElement) {
       return;
-    } else if (evt.key === window.ESC_KEY) {
+    } else if (evt.key === window.util.ESC_KEY) {
       closePopup();
     }
   };
@@ -42,7 +42,7 @@
   };
 
   var onOpenPopupKeydown = function (evt) {
-    if (evt.key === window.ENTER_KEY) {
+    if (evt.key === window.util.ENTER_KEY) {
       openPopup();
     }
   };
@@ -64,7 +64,7 @@
   };
 
   var onClosePopupKeydown = function (evt) {
-    if (evt.key === window.ENTER_KEY) {
+    if (evt.key === window.util.ENTER_KEY) {
       closePopup();
     }
   };
