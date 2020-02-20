@@ -3,7 +3,7 @@
 
   var effectList = document.querySelector('.effects__list');
 
-  var filterChangeHandler = function (evt) {
+  var filterChangeHandler = function (evt) { // поменять на on
     if (evt.target) {
       window.previewImg.className = 'effects__preview--' + evt.target.value;
       if (window.previewImg.className !== 'effects__preview--none') {

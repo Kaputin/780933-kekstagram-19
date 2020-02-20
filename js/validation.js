@@ -26,7 +26,7 @@
           target.setCustomValidity(
               'Хеш-теги должны разделяться пробелами'
           );
-        } else if (window.hasRepeatingElement(hashtagsList[h], h, hashtagsList)) {
+        } else if (window.util.hasRepeatingElement(hashtagsList[h], h, hashtagsList)) {
           target.setCustomValidity(
               'Один и тот же хэш-тег не может быть использован дважды'
           );
