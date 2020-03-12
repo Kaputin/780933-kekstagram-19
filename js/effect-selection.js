@@ -3,7 +3,7 @@
 
   var effectList = document.querySelector('.effects__list');
 
-  var filterChangeHandler = function (evt) {
+  var onFilterChange = function (evt) {
     if (evt.target) {
       window.previewImg.className = 'effects__preview--' + evt.target.value;
       if (window.previewImg.className !== 'effects__preview--none') {
@@ -32,6 +32,6 @@
     }
   };
 
-  effectList.addEventListener('change', filterChangeHandler);
+  effectList.addEventListener('change', onFilterChange);
 
 })();

@@ -1,49 +1,10 @@
 'use strict';
 (function () {
-  // ЧТО ДЕЛАТЬ С КОДОМ КОТОРЫЙ БОЛЬШЕ НЕ БУДЕМ ИСПОЛЬЗОВАТЬ?? ПОКА ОСТАВИТЬ??
-
-
-  // var photos = [];
-  // var arrayTotalNumbersUrl = [];
-  //
-  // var totalNumbers = window.data.MAX_PHOTO_URL - window.data.MIN_PHOTO_URL + 1; // считаем общее количество ссылок
-  //
-  // while (totalNumbers--) {
-  //   arrayTotalNumbersUrl.push(totalNumbers + 1); // Создаем массив с числами по порядку
-  // }
-  //
-  // var randomArrayUrl = window.getRandomArray(arrayTotalNumbersUrl);
-  //
-  // var getRandomArrayComments = function (numberComments) {
-  //   var comments = [];
-  //   for (var i = 0; i < numberComments; i++) {
-  //     comments[i] = {
-  //       avatar: 'img/avatar-' + window.getRandomNumber(window.data.MIN_AVATAR_URL, window.data.MAX_AVATAR_URL) + '.svg',
-  //       message: window.getRandomArrayElement(window.data.COMMENTS_MESSAGES),
-  //       name: window.getRandomArrayElement(window.data.COMMENTS_NAMES)
-  //     };
-  //   }
-  //   return comments;
-  // };
-  //
-  // var getRandomArrayPhoto = function (numberPhoto) {
-  //   for (var i = 0; i < numberPhoto; i++) {
-  //     photos[i] = {
-  //       url: 'photos/' + randomArrayUrl[i] + '.jpg',
-  //       description: window.getRandomArrayElement(window.data.COMMENTS_NAMES),
-  //       likes: window.getRandomNumber(window.data.MIN_LIKES, window.data.MAX_LIKES),
-  //       comments: getRandomArrayComments(window.getRandomNumber(window.data.MIN_COMMENTS, window.data.MAX_COMMENTS))
-  //     };
-  //   }
-  // };
-  //
-  // getRandomArrayPhoto(window.data.NUMBER_PHOTO);
-
-  var similarListElement = document.querySelector('.pictures');
+  window.similarListElement = document.querySelector('.pictures');
+  var imgFilters = document.querySelector('.img-filters');
   var similarPhotoTemplate = document.querySelector('#picture')
       .content
       .querySelector('.picture');
-
 
   var renderPhoto = function (photo) {
     var photoElement = similarPhotoTemplate.cloneNode(true);
@@ -54,20 +15,13 @@
     return photoElement;
   };
 
-  // var fragment = document.createDocumentFragment();
-  // for (var i = 0; i < photos.length; i++) {
-  //   fragment.appendChild(renderPhoto(photos[i]));
-  // }
-  //
-  // similarListElement.appendChild(fragment);
-
-  var onSuccess = function (photos) {
+  window.renderArrPhotos = function (photos) {
     var fragment = document.createDocumentFragment();
-
-    for (var i = 0; i < 25; i++) {
+    for (var i = 0; i < photos.length; i++) {
       fragment.appendChild(renderPhoto(photos[i]));
     }
-    similarListElement.appendChild(fragment);
+    window.similarListElement.appendChild(fragment);
+    imgFilters.classList.remove('img-filters--inactive');
   };
 
   var onError = function (errorMessage) {
@@ -81,6 +35,13 @@
     node.textContent = errorMessage;
     document.body.insertAdjacentElement('afterbegin', node);
   };
+
+  var onSuccess = function (data) {
+    window.photoData = data;
+    window.renderArrPhotos(window.photoData);
+  };
+
+  window.photoData = [];
 
   window.backendLoad(onSuccess, onError);
 
