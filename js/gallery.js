@@ -37,11 +37,11 @@
   };
 
   var onSuccess = function (data) {
-    window.wizardsPh = data;
-    window.renderArrPhotos(window.wizardsPh);
+    window.photoData = data;
+    window.renderArrPhotos(window.photoData);
   };
 
-  window.wizardsPh = [];
+  window.photoData = [];
 
   window.backendLoad(onSuccess, onError);
 

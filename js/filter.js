@@ -12,36 +12,34 @@
     });
   };
 
-  var sortDiscussed = function (arr) { // в util не стал переносить, т.к. только здесь используется, но если необходимо перенесу
+  var removeDebounced = window.debounce(removeArrPhoto);
+
+  var sortDiscussed = function (arr) {
     return arr.slice().sort(function (a, b) {
       return b.comments.length - a.comments.length;
     });
   };
 
-  var onClickBtnSort = function (evet) {
-    if (evet.target) {
+  var onClickBtnSort = function (evt) {
+    if (evt.target) {
       btnRandom.classList.remove('img-filters__button--active');
       btnDefault.classList.remove('img-filters__button--active');
       btnDiscussed.classList.remove('img-filters__button--active');
-      evet.target.classList.add('img-filters__button--active');
+      evt.target.classList.add('img-filters__button--active');
+      removeDebounced();
+      var renderArrPhotosDebounced = window.debounce(window.renderArrPhotos);
     }
-    if (evet.target === btnRandom) {
-      removeArrPhoto();
-      var photos = window.util.getRandomArray(window.wizardsPh.slice());
+    if (evt.target === btnRandom) {
+      var photos = window.util.getRandomArray(window.photoData.slice());
       photos.length = MAX_RANDOM_PHOTO;
-      window.debounce(window.renderArrPhotos(photos)); // пока не понимаю почему не работает debounce, как только его не менял, задержка работает если setTimeout задавать, но там совсем не подходит, оставил пока так
-      // window.setTimeout(function () {
-      //   window.renderArrPhotos(photos)
-      // }, 500);
+      renderArrPhotosDebounced(photos);
     } else
-    if (evet.target === btnDefault) {
-      removeArrPhoto();
-      window.debounce(window.renderArrPhotos(window.wizardsPh));
+    if (evt.target === btnDefault) {
+      renderArrPhotosDebounced(window.photoData);
     } else
-    if (evet.target === btnDiscussed) {
-      removeArrPhoto();
-      var photosMostDiscussed = sortDiscussed(window.wizardsPh.slice());
-      window.debounce(window.renderArrPhotos(photosMostDiscussed));
+    if (evt.target === btnDiscussed) {
+      var photosMostDiscussed = sortDiscussed(window.photoData.slice());
+      renderArrPhotosDebounced(photosMostDiscussed);
     }
   };
 
