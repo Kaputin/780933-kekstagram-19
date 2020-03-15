@@ -43,6 +43,6 @@
 
   window.photoData = [];
 
-  window.backendLoad(onSuccess, onError);
+  window.backend.load(onSuccess, onError);
 
 })();
